@@ -87,7 +87,14 @@
 
                             </div>
                         </form>
-                        <button id="halo" class="btn btn-success btn-block">Absen</button>
+                        <button id="cekLokasi" class="btn btn-warning btn-block">Cek Lokasi</button>
+                        <button wire:click="savePresensi" id="triggerPresensi" class="btn btn-success btn-block">Absen</button>
+                        {{-- <form wire:submit.prevent="savePresensi">
+                            <input wire:model="longD" type="text" name="longtitudeDb" id="longtitudeDb">
+                            <input wire:model="latD" type="text" name="longtitudeDb" id="longtitudeDb">
+                            <button type="submit" id="triggerPresensi" class="btn btn-success btn-block">Absen</button>
+
+                        </form> --}}
 
                     </div>
                 </div>
@@ -106,6 +113,7 @@
         document.addEventListener('livewire:load', () => {
             const defaultLocation = [115.16508060343324, -8.818462592874965]
             const coordinateInfo = document.getElementById('info')
+            
 
             mapboxgl.accessToken = '{{env("MAPBOX_KEY")}}';
             var map = new mapboxgl.Map({
@@ -221,13 +229,17 @@
             });
             // Add the control to the map.
             map.addControl(geolocate);
-            const halo = document.getElementById("halo")
-            halo.onclick = function() {
+            const cekLokasi = document.getElementById("cekLokasi")
+            cekLokasi.onclick = function() {
                 geolocate.trigger();
             }
 
-            geolocate.on('geolocate', function() {
-            console.log('A geolocate event has occurred.')
+            geolocate.on('geolocate', function(position) {
+                console.log(position.coords.latitude)
+                console.log(position.coords.longitude)
+                const lat = position.coords.latitude
+                const long = position.coords.longitude
+                window.livewire.emit('set:latitude-longitude', lat, long)
             });
             
 

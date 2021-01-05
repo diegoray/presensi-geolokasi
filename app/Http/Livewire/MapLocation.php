@@ -5,7 +5,9 @@ namespace App\Http\Livewire;
 use Livewire\WithFileUploads;
 use Livewire\Component;
 use App\Models\Location;
+use App\Models\Test;
 use Illuminate\Support\Facades\Storage;
+use Amp\Loop;
 
 class MapLocation extends Component
 {
@@ -17,6 +19,31 @@ class MapLocation extends Component
     public $imageUrl; 
     public $isEdit = false;
     
+    // simpan ke lokasi ke db
+    public $longDb, $latDb;
+
+    public function hitungJarak($lat1, $lon1, $lat2, $lon2, $unit)
+    {
+        if (($lat1 == $lat2) && ($lon1 == $lon2)) {
+            return 0;
+        } else {
+            $theta = $lon1 - $lon2;
+            $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+            $dist = acos($dist);
+            $dist = rad2deg($dist);
+            $miles = $dist * 60 * 1.1515;
+            $unit = strtoupper($unit);
+        
+            if ($unit == "K") {
+                return ($miles * 1.609344);
+            } else if ($unit == "N") {
+                return ($miles * 0.8684);
+            } else {
+                return $miles;
+            }
+        }
+    }
+
     private function loadLocations(){
         $locations = Location::orderBy('created_at', 'desc')->get();
 
@@ -84,7 +111,7 @@ class MapLocation extends Component
         $this->clearForm();
         $this->dispatchBrowserEvent('locationAdded', $this->geoJson);
     }
-
+    
     public function updateLocation(){  
         $this->validate([
             'long' => 'required',
@@ -161,5 +188,70 @@ class MapLocation extends Component
                 'image' => 'image|max:2048'
             ]);
         }        
+    }
+
+    // public function ka(){
+    //     $this->longDb;
+    //     $this->latDb;
+    // }
+
+    public function cekLokasi()
+    {
+
+    }
+    
+    public function savePresensi()
+    {
+        $id = 6;
+        $lokasiPresensi = Location::where('id', $id)->first();
+        // dd($lokasiPresensi->long);
+        // dd($lokasiPresensi->lat);
+        $aa = $this->hitungJarak($lokasiPresensi->long, $lokasiPresensi->lat, $this->longDb, $this->latDb, "K");
+        dd($aa);
+        // Test::create([
+        //     'longDb' => $this->longDb,
+        //     'latDb' => $this->latDb,
+        // ]);
+        // dd($myWatcherId);
+        
+        // hitung distance disini
+        
+        // Loop::run(function () {
+            // $myWatcherId = [];
+                // $myWatcherId = [
+                //     'longDb' => $this->longDb,
+                //     'latDb' => $this->latDb,
+                // ];
+            // Loop::repeat(1000, function () use ($myWatcherId) {
+            // });
+
+            // Loop::delay(10000, function () use ($myWatcherId) {
+            //     dd($myWatcherId);
+            // });
+
+            // if(distance >= 0.5){
+
+            // } else {
+
+            // }
+
+            // dd($myWatcherId);
+            // Loop::delay(10000, function () use ($myWatcherId) {
+            //     Test::create($myWatcherId);
+                // Loop::cancel($myWatcherId);
+        //     });
+        // });
+        
+    }
+    // Test::create($savePresensi);
+    
+    protected $listeners = [
+        'set:latitude-longitude' => 'setLatitudeLongitude'
+    ];
+
+    public function setLatitudeLongitude($lat, $long) 
+    {
+        $this->latDb = $lat;
+        $this->longDb = $long;
     }
 }

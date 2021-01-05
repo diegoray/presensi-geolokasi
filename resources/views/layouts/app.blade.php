@@ -55,6 +55,26 @@
                                 </li>
                             @endif
                         @else
+                            @can('kelola pegawai')
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('pegawai') }}">Kelola Pegawai</a>
+                                </li>
+                            @endcan
+                            @can('kelola cuti')
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('cuti') }}">Kelola cuti</a>
+                                </li>
+                            @endcan
+                            @can('kelola lokasi')
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('lokasi') }}">Kelola lokasi</a>
+                                </li>
+                            @endcan
+                            @can('kelola presensi')
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('presensi') }}">Kelola presensi</a>
+                                </li>
+                            @endcan
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -86,6 +106,23 @@
     @livewireScripts
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        window.livewire.on('pegawaiAdded', () => {
+            $('#createPegawaiModal').modal('hide');
+        })
+
+        window.livewire.on('pegawaiUpdated', () => {
+            $('#updatePegawaiModal').modal('hide');
+        })
+
+        window.livewire.on('cutiAdded', () => {
+            $('#createCutiModal').modal('hide');
+        })
+
+        window.livewire.on('cutiUpdated', () => {
+            $('#updateCutiModal').modal('hide');
+        })
+    </script>
     @stack('script')
 </body>
 </html>
