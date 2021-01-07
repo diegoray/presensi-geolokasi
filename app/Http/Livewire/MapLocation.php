@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Models\Test;
 use Illuminate\Support\Facades\Storage;
 use Amp\Loop;
+use App\Models\User;
 
 class MapLocation extends Component
 {
@@ -16,6 +17,7 @@ class MapLocation extends Component
     public $count = 5;
     public $locationId, $long, $lat, $name, $description, $image;
     public $geoJson;
+    public $pegawai;
     public $imageUrl; 
     public $isEdit = false;
     
@@ -80,6 +82,7 @@ class MapLocation extends Component
         $this->name = '';
         $this->description = '';
         $this->image = '';
+        $this->pegawai = '';
     }
 
     public function saveLocation() {
@@ -88,6 +91,7 @@ class MapLocation extends Component
             'lat' => 'required',
             'name' => 'required',
             'description' => 'required',
+            'pegawai' => 'required|array',
             'image' => 'image|max:2048|required',
         ]);
 
@@ -99,13 +103,23 @@ class MapLocation extends Component
             $imageName
         );
 
-        Location::create([
+        // Location::create([
+        //     'long' => $this->long,
+        //     'lat' => $this->lat,
+        //     'name' => $this->name,
+        //     'description' => $this->description,
+        //     'image' => $imageName,
+        // ]);
+
+        $loc = Location::create([
             'long' => $this->long,
             'lat' => $this->lat,
             'name' => $this->name,
             'description' => $this->description,
             'image' => $imageName,
         ]);
+
+        $loc->users()->sync($this->pegawai);
 
         $this->loadLocations();
         $this->clearForm();
@@ -117,6 +131,7 @@ class MapLocation extends Component
             'long' => 'required',
             'lat' => 'required',
             'name' => 'required',
+            // 'pegawai' => 'required|array',
             'description' => 'required',
         ]);
 
@@ -156,6 +171,7 @@ class MapLocation extends Component
 
     public function deleteLocationById(){
         $location = Location::findOrFail($this->locationId);
+        $location->users()->detach();
         $location->delete();
 
         $this->imageUrl = "";
@@ -166,6 +182,8 @@ class MapLocation extends Component
 
     public function findLocationById($id){
         $location = Location::findOrFail($id);
+        // dd($location->users->pluck('id'));
+
 
         $this->locationId = $id;
         $this->long = $location->long;
@@ -174,12 +192,16 @@ class MapLocation extends Component
         $this->description = $location->description;
         $this->isEdit = true;
         $this->imageUrl = $location->image;
+        // dd($this->isEdit);
     }
 
     public function render()
     {
         $this->loadLocations();
-        return view('livewire.map-location');
+        return view('livewire.map-location', [
+            'pegawais' => User::get(),
+            'lokasis' => Location::get(),
+        ]);
     }
 
     public function previewImage(){
@@ -188,16 +210,6 @@ class MapLocation extends Component
                 'image' => 'image|max:2048'
             ]);
         }        
-    }
-
-    // public function ka(){
-    //     $this->longDb;
-    //     $this->latDb;
-    // }
-
-    public function cekLokasi()
-    {
-
     }
     
     public function savePresensi()

@@ -16,7 +16,7 @@ class KelolaCuti extends Component
 
     // public $pegawai;
     public $search;
-    public $userId, $dari_tanggal, $sampai_tanggal;
+    public $userId, $dari_tanggal, $sampai_tanggal, $alasan;
     public $isOpen = 0;
     public $updateStateId = 0;
 
@@ -34,6 +34,7 @@ class KelolaCuti extends Component
         $this->userId = '';
         $this->dari_tanggal = '';
         $this->sampai_tanggal = '';
+        $this->alasan = '';
     }
 
     public function showUpdate($id)
@@ -42,6 +43,7 @@ class KelolaCuti extends Component
         // $this->userId = $id;
         $this->dari_tanggal = $cuti->dari_tanggal;
         $this->sampai_tanggal = $cuti->sampai_tanggal;
+        $this->alasan = $cuti->alasan;
         // $this->updateStateId = $id;
 
     }
@@ -52,6 +54,7 @@ class KelolaCuti extends Component
         $this->userId = $cuti->id;
         $this->dari_tanggal = $cuti->dari_tanggal;
         $this->sampai_tanggal = $cuti->sampai_tanggal;
+        $this->alasan = $cuti->alasan;
     }
 
     public function updateCuti()
@@ -60,6 +63,7 @@ class KelolaCuti extends Component
             [
                 'dari_tanggal' => ['required'],
                 'sampai_tanggal' => ['required'],
+                'alasan' => ['required'],
             ]
         );
 
@@ -68,6 +72,7 @@ class KelolaCuti extends Component
             $cuti->update([
                 'dari_tanggal' => $this->dari_tanggal,
                 'sampai_tanggal' => $this->sampai_tanggal,
+                'alasan' => $this->alasan
             ]);
             $this->resetInputField();
             $this->emit('cutiUpdated');
@@ -83,12 +88,26 @@ class KelolaCuti extends Component
         }
     }
 
+    public function approveCuti($id)
+    {
+        // $cuti = Cuti::find($id);
+        // $cuti->update([
+        //     'is_valid' => 1
+        // ]);
+        $cuti = Cuti::where('id', $id);
+        $cuti->update([
+            'is_valid' => 1
+        ]);
+        session()->flash('message', 'Cuti berhasil diapprove');
+    }
+
     public function saveCuti()
     {
         $this->validate(
             [
                 'dari_tanggal' => ['required'],
                 'sampai_tanggal' => ['required'],
+                'alasan' => ['required'],
             ]
         );
         
@@ -96,6 +115,8 @@ class KelolaCuti extends Component
             'user_id' => Auth::id(),
             'dari_tanggal' => $this->dari_tanggal,
             'sampai_tanggal' => $this->sampai_tanggal,
+            'alasan' => $this->alasan,
+            'isValid' => 0
         ]);
         $this->resetInputField();
         $this->emit('cutiAdded');

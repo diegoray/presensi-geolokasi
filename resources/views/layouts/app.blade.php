@@ -18,8 +18,9 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
+    
     <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     @livewireStyles
 </head>
 <body>
@@ -106,6 +107,7 @@
     @livewireScripts
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
     <script>
         window.livewire.on('pegawaiAdded', () => {
             $('#createPegawaiModal').modal('hide');
@@ -122,7 +124,7 @@
         window.livewire.on('cutiUpdated', () => {
             $('#updateCutiModal').modal('hide');
         })
-    </script>
+        </script>
     @stack('script')
 </body>
 </html>

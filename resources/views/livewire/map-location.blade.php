@@ -56,8 +56,16 @@
                                         <label for="description">Deskripsi</label>
                                         <textarea wire:model="description" name="description" id="description" class="form-control"></textarea>
                                         @error('description')
-                                            <small class="text-danger">{{$message}}</small>
+                                        <small class="text-danger">{{$message}}</small>
                                         @enderror
+                                    </div>
+                                    <div class="form-group" wire:ignore>
+                                        <label for="pegawai">Pegawai</label>
+                                        <select {{ $isEdit ? 'disabled' : '' }} name="pegawai" id="pegawai" class="form-control pegawai" multiple="multiple">
+                                            @foreach ($pegawais as $pegawai)
+                                                <option value="{{ $pegawai->id }}">{{ $pegawai->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="image">Image</label>
@@ -81,21 +89,12 @@
                                         <button wire:click="deleteLocationById" type="button" class="btn btn-danger active btn-block">Delete Location</button>
                                         @endif
                                     </div>
-
-
                                 </div>
 
                             </div>
                         </form>
                         <button id="cekLokasi" class="btn btn-warning btn-block">Cek Lokasi</button>
                         <button wire:click="savePresensi" id="triggerPresensi" class="btn btn-success btn-block">Absen</button>
-                        {{-- <form wire:submit.prevent="savePresensi">
-                            <input wire:model="longD" type="text" name="longtitudeDb" id="longtitudeDb">
-                            <input wire:model="latD" type="text" name="longtitudeDb" id="longtitudeDb">
-                            <button type="submit" id="triggerPresensi" class="btn btn-success btn-block">Absen</button>
-
-                        </form> --}}
-
                     </div>
                 </div>
             </div>
@@ -183,7 +182,7 @@
                     icon: "success",
                     button: "Ok",
                 }).then((value) => {
-                    loadLocations(JSON.parse(e.detail))
+                    loadLocations(JSON.parse(e.detail));
                 });
             })
 
@@ -241,8 +240,12 @@
                 const long = position.coords.longitude
                 window.livewire.emit('set:latitude-longitude', lat, long)
             });
-            
 
+            $('.pegawai').select2();
+            $('.pegawai').on('change', function() {
+                @this.pegawai = $(this).val();
+            });
+            
             map.on('click', (e) => {
                 // const longtitude = e.lngLat.lng
                 // const lattitude = e.lngLat.lat

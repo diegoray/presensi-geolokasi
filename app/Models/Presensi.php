@@ -5,16 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Cuti extends Model
+class Presensi extends Model
 {
     use HasFactory;
+    protected $guarded = [];
 
-    protected $fillable = [
-        'user_id',
-        'dari_tanggal',
-        'sampai_tanggal',
-        'alasan'
-    ];
 
     public function user()
     {

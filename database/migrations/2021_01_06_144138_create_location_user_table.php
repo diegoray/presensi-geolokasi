@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCutisTable extends Migration
+class CreateLocationUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,10 @@ class CreateCutisTable extends Migration
      */
     public function up()
     {
-        Schema::create('cutis', function (Blueprint $table) {
-            $table->id();
+        Schema::create('location_user', function (Blueprint $table) {
+            $table->foreignId('location_id');
             $table->foreignId('user_id');
-            $table->date('dari_tanggal');
-            $table->date('sampai_tanggal');
-            $table->string('alasan');
-            $table->boolean('is_valid')->default(0);
-            $table->timestamps();
+            $table->primary('location_id', 'user_id');
         });
     }
 
@@ -31,6 +27,6 @@ class CreateCutisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cutis');
+        Schema::dropIfExists('location_user');
     }
 }

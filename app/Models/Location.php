@@ -10,4 +10,9 @@ class Location extends Model
     protected $table = "locations";
     protected $guarded = [];
     use HasFactory;
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

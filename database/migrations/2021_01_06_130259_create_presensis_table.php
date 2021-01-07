@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCutisTable extends Migration
+class CreatePresensisTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateCutisTable extends Migration
      */
     public function up()
     {
-        Schema::create('cutis', function (Blueprint $table) {
+        Schema::create('presensis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->date('dari_tanggal');
-            $table->date('sampai_tanggal');
-            $table->string('alasan');
-            $table->boolean('is_valid')->default(0);
+            $table->boolean('is_checkout')->default(0);
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateCutisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cutis');
+        Schema::dropIfExists('presensis');
     }
 }

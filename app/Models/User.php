@@ -12,6 +12,21 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles;
 
+    public function cutis()
+    {
+        return $this->hasMany(Cuti::class);
+    }
+
+    public function presensis()
+    {
+        return $this->hasMany(Presensi::class);
+    }
+
+    public function locations()
+    {
+        return $this->belongsToMany(Location::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

@@ -30,6 +30,8 @@
                                     <th scope="col">Nama</th>
                                     <th scope="col">Dari Tanggal</th>
                                     <th scope="col">Sampai Tanggal</th>
+                                    <th scope="col">Alasan</th>
+                                    <th scope="col">Status</th>
                                     <th scope="col">Action</th>
                               </tr>
                             </thead>
@@ -40,8 +42,11 @@
                                 <td>{{ $c->user->name }}</td>
                                 <td>{{ $c->dari_tanggal }}</td>
                                 <td>{{ $c->sampai_tanggal }}</td>
+                                <td>{{ $c->alasan }}</td>
+                                <td>{{ $c->is_valid ? 'Approve' : 'Belum Approve' }}</td>
                                 <td class="text-center">
                                     <button wire:click.prevent="editCuti({{ $c->id }})" data-toggle="modal" data-target="#updateCutiModal" class="btn btn-warning btn-sm">Edit</button>
+                                    <button wire:click.prevent="approveCuti({{ $c->id }})" class="btn btn-success btn-sm">Approve</button>
                                     <button wire:click.prevent="deleteCuti({{ $c->id }})" class="btn btn-danger btn-sm">Hapus</button>
                                 </td>
                             </tr>

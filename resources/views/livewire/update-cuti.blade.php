@@ -21,6 +21,11 @@
                             <input wire:model="sampai_tanggal" type="date" class="form-control">
                             @error('sampai_tanggal') <span class="text-danger">{{$message}}</span>@enderror
                         </div>
+                        <div class="form-group">
+                            <label for="alasan">Alasan</label>
+                            <input wire:model="alasan" type="text" class="form-control">
+                            @error('alasan') <span class="text-danger">{{$message}}</span>@enderror
+                        </div>
                     </div>
                 </div>
             </div>
